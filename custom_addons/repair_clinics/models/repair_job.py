@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.models import Constraint, UniqueIndex, Index
 from .repair_selection import (
     PRODUCT_LOCATION_SELECTION, 
     QUOTE_STATUS_SELECTION, 
