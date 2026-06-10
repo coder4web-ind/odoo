@@ -6,7 +6,9 @@
     'summary': 'Core Booking & Device Tracking for Electronic Gadgets',
     'depends': ['base','repair_device','repair_status'],
     'author': 'Coder4web@yahoo.com',
-    'data': [],                
+    'data':[
+        'security/ir.model.access.csv',
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,

@@ -1,4 +1,5 @@
 from odoo import models,fields
+from odoo.models import Constraint,UniqueIndex,Index
 
 class RepairJobType(models.Model):
     _name = "repair.job.type"
@@ -12,8 +13,7 @@ class RepairJobType(models.Model):
     pop_validation = fields.Boolean("POP Validation",default=True)
     allow_exchange_unit = fields.Boolean("Allow Exchange Unit",default=False)
 
-    _sql_constraints = [
-        ('unique_name_constraint', 'UNIQUE(name)', 'Repair Type must be unique'),
-        ('unique_code_constraint', 'UNIQUE(code)', 'Repair Type code must be unique'),
-    ]
+    _unique_name = Constraint("unique(name)", "The name must be unique!")
+    _unique_code = Constraint("unique(code)", "The code must be unique!")
+
 

@@ -27,7 +27,5 @@ class RepairCompanyManufacturerRel(models.Model):
     state_id = fields.Many2one('res.country.state', string="State")
     country_id = fields.Many2one('res.country', string="Country")
 
-    _unique_company_manufacturer = UniqueIndex(
-        ["company_id", "manufacturer_id"], 
-        msg="A configuration for this Manufacturer already exists for this Service Provider branch!"
-    )
+    
+    _unique_company_manufacturer = UniqueIndex("(company_id, manufacturer_id)")

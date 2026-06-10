@@ -31,7 +31,4 @@ class RepairCompanyModelRel(models.Model):
     etd_date_days = fields.Integer("ETD Lead Time (Days)", default=0)
     pop_period = fields.Integer("POP Period (Days)", default=0)
     
-    _unique_company_model = UniqueIndex(
-        ["company_id", "model_id"], 
-        msg="A configuration for this Device Model already exists for this Service Provider branch!"
-    )
+    _unique_company_model = UniqueIndex("(company_id, model_id)")

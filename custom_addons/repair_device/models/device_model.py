@@ -18,10 +18,10 @@ class RepairDeviceModel(models.Model):
     etd_date_days = fields.Integer("ETD date days")
     pop_period = fields.Integer("POP Period")
     
-    # MODERN ODOO 19 CONSTRAINTS & PERFORMANCE INDEXES
-    _unique_manufacturer_code = UniqueIndex(
-        ["manufacturer_id", "code"], 
-        msg="This Model Code already exists for this specific Manufacturer!"
-    )
-    _index_name_idx = Index(["name"]) 
-    _index_code_idx = Index(["code"]) 
+    # =========================================================================
+# 🎯 FIXED ODOO 19 INDEXES (Explicit SQL Expressions, No Message String)
+# =========================================================================
+_unique_manufacturer_code = UniqueIndex("(manufacturer_id, code)")
+
+_index_name_idx = Index("(name)") 
+_index_code_idx = Index("(code)")
