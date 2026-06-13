@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="repair_clinics_menu_root" 
+              name="Repair Jobs"
+              sequence="10"/>
+
+    <menuitem id="repair_job_tree_category" 
+              name="Operations" 
+              parent="repair_clinics_menu_root"
+              sequence="10"/>
+            
+    <menuitem id="repair_clinics_open_jobs" 
+              name="All Open Tickets"
+              parent="repair_job_tree_category" 
+              action="repair_clinics_jobs_action"
+              sequence="10"/>
+
+    <menuitem id="repair_clinics_overdue_jobs" 
+              name="All Overdue Tickets"
+              parent="repair_job_tree_category" 
+              action="repair_clinics_jobs_action"
+              sequence="10"/>
+
+    <menuitem id="repair_clinics_closed_jobs" 
+              name="All Closed Tickets"
+              parent="repair_job_tree_category" 
+              action="repair_clinics_jobs_action"
+              sequence="10"/>
+
+    <menuitem id="repair_clinics_cancel_jobs" 
+              name="All Cancel Tickets"
+              parent="repair_job_tree_category" 
+              action="repair_clinics_jobs_action"
+              sequence="10"/>
+</odoo>

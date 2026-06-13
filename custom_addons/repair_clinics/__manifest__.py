@@ -8,6 +8,8 @@
     'author': 'Coder4web@yahoo.com',
     'data':[
         'security/ir.model.access.csv',
+        'views/repair_job_view.xml',
+        'views/repair_clinics_menu.xml'
     ],
     'installable': True,
     'auto_install': False,

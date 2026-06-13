@@ -19,6 +19,13 @@ class RepairJob(models.Model):
         default=lambda self: self.env.company
     )
 
+    service_provider_id = fields.Many2one(
+        'res.company', 
+        string="Service Provider", 
+        required=True, 
+        default=lambda self: self.env.company
+    )
+
     
     summary = fields.Char('Summary', size=256, required=True)
     description = fields.Text("Complaint Details", required=True)
