@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="repair_clinics_jobs_action" model="ir.actions.act_window">
         <field name="name">View Jobs</field>        
         <field name="res_model">repair.job</field>
@@ -12,5 +13,23 @@
             Use manufacturer/device details to book a job using IMEI or Serial No.
           </p>
         </field>
+    </record>
+
+    <record id="repair_clinic_job_view_list" model="ir.ui.view"> 
+      <field name="name">repair.job.list</field>
+      <field name="model">repair.job</field> 
+      <field name="arch" type="xml">
+        <list string="Repair Jobs Grid">
+          <field name="id" string="Job ID"/>
+          <field name="repair_type_id" string="Repair Type"/>
+          <field name="customer_id" string="Customer"/>
+          <field name="manufacturer_id" string="Manufacturer"/>
+          <field name="unit_type_id" string="Unit Type"/>
+          <field name="device_model_id" string="Model"/>
+          <field name="imei" string="Imei No"/>
+          <field name="serial" string="Serial No"/>
+          <field name="purchase_date" string="Purchase Date" help="When was this model purcahses, to identified weather it is in under warranty"/>
+        </list>
+      </field>
     </record>
 </odoo>

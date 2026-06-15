@@ -32,4 +32,14 @@
               parent="repair_job_tree_category" 
               action="repair_clinics_jobs_action"
               sequence="10"/>
+
+    <menuitem id="repair_clinics_configuration_category" 
+              name="Configuration"
+              parent="repair_clinics_menu_root"
+              sequence="11"/> 
+    <menuitem id="repair_clinics_repair_type_list" 
+              name="Repair Types"
+              parent="repair_clinics_configuration_category" 
+              action="repair_clinics_repair_type_action"
+              sequence="10"/>
 </odoo>

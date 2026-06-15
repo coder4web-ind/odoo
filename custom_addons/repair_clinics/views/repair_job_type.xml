@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="repair_clinics_repair_type_action" model="ir.actions.act_window">
+    <field name="name">Repair Types</field>        
+        <field name="res_model">repair.job.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="repair_type_view_list" model="ir.ui.view"> 
+      <field name="name">repair.type.list</field>
+      <field name="model">repair.job.type</field> 
+      <field name="arch" type="xml">
+        <list string="Repair Types Grid">
+          <field name="id" string="Repair Type ID"/>
+          <field name="name" string="Repair Type"/>
+          <field name="code" string="Code"/>
+          <field name="imei_required" string="Imei"/>
+          <field name="serial_required" string="Serial"/>
+          <field name="pop_validation" string="POP"/>
+          <field name="allow_exchange_unit" string="Exchange Available"/>
+        </list>
+      </field>
+    </record>
+</odoo>

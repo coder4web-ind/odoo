@@ -15,28 +15,60 @@ class RepairJob(models.Model):
     company_id = fields.Many2one(
         'res.company', 
         string="Branch", 
-        required=True, 
-        default=lambda self: self.env.company
+        required=False, 
+        default=lambda self: self.env.company if self.env.company.company_type_role == 'branch' else False,
+        domain="[('company_type_role', '=', 'branch')]"
     )
 
     service_provider_id = fields.Many2one(
         'res.company', 
         string="Service Provider", 
         required=True, 
-        default=lambda self: self.env.company
+        default=lambda self: self.env.company if self.env.company.company_type_role == 'service_provider' else False,
+        domain="[('company_type_role', '=', 'service_provider')]"
     )
 
     
     summary = fields.Char('Summary', size=256, required=True)
     description = fields.Text("Complaint Details", required=True)
-    customer_id = fields.Many2one('res.partner', string="Customer", required=True)
+    customer_id = fields.Many2one(
+        'res.partner', 
+        string="Customer", 
+        required=True,
+        domain="[('is_company', '=', False), ('user_ids', '=', False)]"
+    )
     repair_type_id = fields.Many2one('repair.job.type', string="Diagnostic Classification", ondelete='cascade')
     
     adjust_booking_date = fields.Boolean("Adjust Booking Date", default=False)
     reason_adjust_booking_date = fields.Char("Reason to Adjust Booking Date", size=255)
     
-    manufacturer_id = fields.Many2one("repair.device.manufacturer", string="Device Manufacturer", required=True)
-    device_model_id = fields.Many2one("repair.device.model", string="Device Model", required=True)
+    manufacturer_id = fields.Many2one(
+        "repair.device.manufacturer", 
+        string="Device Manufacturer", 
+        required=True,
+        
+    )
+
+    allowed_unit_type_ids = fields.Many2many(
+        "repair.device.unit.type", 
+        compute="_compute_allowed_unit_types",
+        string="Allowed Unit Types"
+    )
+
+    unit_type_id = fields.Many2one(
+        "repair.device.unit.type", 
+        string="Unit Type",
+        required=True,
+        domain="[('id', 'in', allowed_unit_type_ids)]"
+    )
+
+    device_model_id = fields.Many2one(
+        "repair.device.model", 
+        string="Device Model", 
+        required=True,
+        domain="[('manufacturer_id', '=', manufacturer_id), ('unit_type_id', '=', unit_type_id)]"
+    )
+
     imei = fields.Char('Imei', size=16)
     serial = fields.Char('Serial No', size=20)
     purchase_date = fields.Date('Date of purchase')
@@ -91,3 +123,30 @@ class RepairJob(models.Model):
             'user_id': self.env.user.id,
             'changed_date': fields.Datetime.now()
         })
+
+    @api.depends('manufacturer_id')
+    def _compute_allowed_unit_types(self):
+        """Scans the Model registry to extract ONLY distinct Unit Types for the chosen brand"""
+        for rec in self:
+            if rec.manufacturer_id:
+                # Find all device models matching the selected manufacturer
+                matching_models = self.env['repair.device.model'].search([
+                    ('manufacturer_id', '=', rec.manufacturer_id.id)
+                ])
+                # Extract all distinct unit type IDs using Python set mapping
+                unit_type_ids = matching_models.mapped('unit_type_id').ids
+                rec.allowed_unit_type_ids = [(6, 0, unit_type_ids)]
+            else:
+                # If no manufacturer is chosen, clear the helper array
+                rec.allowed_unit_type_ids = [(5, 0, 0)]
+
+    @api.onchange('manufacturer_id')
+    def _onchange_manufacturer_reset_children(self):
+        """Wipes down cascading values if the user alters the core brand choice"""
+        self.unit_type_id = False
+        self.device_model_id = False
+
+    @api.onchange('unit_type_id')
+    def _onchange_unit_type_reset_model(self):
+        """Wipes downstream model selection if category shifts"""
+        self.device_model_id = False
