@@ -5,7 +5,9 @@
     'summary': 'Master Catalog for Electronics Manufacturers and Models',
     'depends': ['base'],
     'data':[
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'security/repair_security.xml',
+        'views/repair_device_manufacturer.xml'
     ],
     'author': 'Coder4web@yahoo.com',
     'installable': True,

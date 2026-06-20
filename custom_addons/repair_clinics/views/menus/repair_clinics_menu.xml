@@ -41,5 +41,5 @@
               name="Repair Types"
               parent="repair_clinics_configuration_category" 
               action="repair_clinics_repair_type_action"
-              sequence="10"/>
+              sequence="11"/>
 </odoo>

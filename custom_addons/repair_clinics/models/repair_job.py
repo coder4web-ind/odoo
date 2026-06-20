@@ -4,20 +4,40 @@ from .repair_selection import (
     PRODUCT_LOCATION_SELECTION, 
     QUOTE_STATUS_SELECTION, 
     WARRANTY_STATUS_SELECTION, 
-    ESTIMATE_STATUS_SELECTION
+    ESTIMATE_STATUS_SELECTION,
+    PRODUCT_CONDITION
 )
 
 class RepairJob(models.Model):
     _name = "repair.job"
     _description = "Repair Job Management"
 
-    
-    company_id = fields.Many2one(
+    branch_id = fields.Many2one(
         'res.company', 
         string="Branch", 
-        required=False, 
+        required=False,
+        domain="[('company_type_role', '=', 'branch')]",
         default=lambda self: self.env.company if self.env.company.company_type_role == 'branch' else False,
-        domain="[('company_type_role', '=', 'branch')]"
+    )
+
+    
+    client_id = fields.Many2one(
+        'res.company', 
+        string='Client', 
+        domain="[('company_type_role', '=', 'client')]",
+        store=False,
+    )
+
+    network_id = fields.Many2one(
+        'res.company', 
+        string='Network', 
+        domain="[('company_type_role', '=', 'network')]",
+        store=False,
+    )
+
+    current_company_role = fields.Char(
+        compute="_compute_current_company_role",
+        store=False
     )
 
     service_provider_id = fields.Many2one(
@@ -38,6 +58,8 @@ class RepairJob(models.Model):
         domain="[('is_company', '=', False), ('user_ids', '=', False)]"
     )
     repair_type_id = fields.Many2one('repair.job.type', string="Diagnostic Classification", ondelete='cascade')
+
+    device_condition = fields.Selection(PRODUCT_CONDITION,string="Product Condition", default='good')
     
     adjust_booking_date = fields.Boolean("Adjust Booking Date", default=False)
     reason_adjust_booking_date = fields.Char("Reason to Adjust Booking Date", size=255)
@@ -150,3 +172,41 @@ class RepairJob(models.Model):
     def _onchange_unit_type_reset_model(self):
         """Wipes downstream model selection if category shifts"""
         self.device_model_id = False
+
+    @api.depends_context('company')
+    def _compute_current_company_role(self):
+        for record in self:
+            record.current_company_role = self.env.company.company_type_role or 'other'
+
+    @api.onchange('branch_id')
+    def _onchange_branch_id_populate_hierarchy(self):
+        """Bottom-up automation: sets parent fields in the UI cache if branch is picked"""
+        if self.branch_id:
+            parent_client = self.branch_id.parent_id
+            if parent_client and parent_client.company_type_role == 'client':
+                self.client_id = parent_client
+                
+                parent_network = parent_client.parent_id
+                if parent_network and parent_network.company_type_role == 'network':
+                    self.network_id = parent_network
+
+    @api.onchange('network_id')
+    def _onchange_network_reset_children(self):
+        """Top-down reset: clears sub-choices when network changes"""
+        if self.network_id:
+            # We explicitly check if client belongs to this network to avoid clearing it prematurely
+            if self.client_id and self.client_id.parent_id != self.network_id:
+                self.client_id = False
+                self.branch_id = False
+        else:
+            self.client_id = False
+            self.branch_id = False
+
+    @api.onchange('client_id')
+    def _onchange_client_reset_children(self):
+        """Top-down reset: clears branch if client changes"""
+        if self.client_id:
+            if self.branch_id and self.branch_id.parent_id != self.client_id:
+                self.branch_id = False
+        else:
+            self.branch_id = False

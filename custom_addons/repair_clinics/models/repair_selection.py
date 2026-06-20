@@ -6,6 +6,14 @@ PRODUCT_LOCATION_SELECTION = [
     ('other', 'Other')
 ]
 
+PRODUCT_CONDITION = [
+        ('good', 'Good Condition'),
+        ('fair', 'Little Scratches'),
+        ('poor', 'Poor Condition'),
+        ('extreme', 'Extremely Poor'),
+        ('dead', 'Dead Device (No Power)')
+    ]
+
 QUOTE_STATUS_SELECTION = [
     ("not_required","Not Required"),
     ("sent","Sent"),

@@ -7,11 +7,12 @@
     'depends': ['base','repair_device','repair_status'],
     'author': 'Coder4web@yahoo.com',
     'data':[
-        'security/ir.model.access.csv',
+        'security/ir.model.access.csv',        
         'views/res_company_view.xml',
         'views/repair_job_view.xml',
         'views/repair_job_type.xml',
-        'views/repair_clinics_menu.xml'
+        'views/menus/repair_clinics_menu.xml',
+        'views/menus/repair_configuration_menu.xml'
     ],
     'installable': True,
     'auto_install': False,
