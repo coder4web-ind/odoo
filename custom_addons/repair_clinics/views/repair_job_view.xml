@@ -28,88 +28,116 @@
           <field name="device_model_id" string="Model"/>
           <field name="imei" string="Imei No"/>
           <field name="serial" string="Serial No"/>
-          <field name="purchase_date" string="Purchase Date" help="When was this model purcahses, to identified weather it is in under warranty"/>
+          <field name="purchase_date" string="Purchase Date" help="When was this model purchased, to identify whether it is under warranty"/>
         </list>
       </field>
     </record>
+
     <record id="repair_clinic_job_view_form" model="ir.ui.view">
-      <field name="name">repair.job.list</field>
+      <field name="name">repair.job.form</field>
       <field name="model">repair.job</field> 
       <field name="arch" type="xml">
-      <form string="New Job" create="True" edit="False">
-        <sheet>
-          <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Book Repair Job"/>
-          <button special="cancel" class="btn btn-danger" icon="fa-trash" string="Cancel"/>
+            <form string="New Job" create="1" edit="0">
+                <header>
+                    <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Book Repair Job"/>
+                    <button special="cancel" class="btn btn-danger" icon="fa-trash" string="Cancel"/>
+                </header>
 
-          <div class="oe_title">
-            <h1>New Job</h1>
-          </div>
-            <group string="Client and Branch Details">
-              <field name="current_company_role" invisible="1" />
+                <sheet>
+                    <div class="oe_title">
+                        <h1>New Job</h1>
+                    </div>
 
-              <field name="network_id"
-                    invisible="current_company_role in ('network', 'client', 'branch', 'service_provider')"
-                    required="current_company_role in ('other','super_admin')"
-                    domain="[('company_type_role', '=', 'network')]"
-                    widget="selection"/>
+                    <group string="Client and Branch Details">
+                        <field name="network_id_read" invisible="1"/>
+                        <field name="client_id_read" invisible="1"/>
+                        <field name="branch_id_read" invisible="1"/>
+                        <field name="current_company_role" invisible="0"/>
+                        <field name="client_id_domain" invisible="1"/>
+                        <field name="is_custom_client" invisible="0"/>
 
-              <field name="client_id"
-                    invisible="current_company_role in ('client', 'branch') or (current_company_role in ('super_admin','other') and not network_id)"
-                    required="current_company_role in ('network', 'service_provider', 'other','super_admin')"
-                    domain="[('company_type_role', '=', 'client'), ('parent_id', '=', network_id)]"
-                    widget="selection"/>
+                        <field name="network_id"
+                               widget="selection"
+                               readonly="network_id_read"
+                               required="current_company_role in ('other', 'super_admin')"/>
 
-              <field name="branch_id"
-                    invisible="current_company_role == 'branch' or (current_company_role != 'branch' and not client_id)"
-                    required="current_company_role in ('network', 'client', 'service_provider', 'other','super_admin')"
-                    domain="[('company_type_role', '=', 'branch'), ('parent_id', '=', client_id)]"
-                    widget="selection"/>
-          </group>
-            <group>
-              <group string="Device Specifications" 
-       invisible="current_company_role in ('other','super_admin') and not branch_id">
-                <field name="device_condition" 
-                      string="Device Condition"
-                      required="True" 
-                      widget="radio" options="{'horizontal': true}"/>
-                <field name="manufacturer_id" 
-                      string="Manufacturer"
-                      required="True" 
-                      widget="selection"/>
-                <field name="allowed_unit_type_ids" 
-                      invisible="1"/>
-                <field name="unit_type_id" 
-                      required="True" 
-                      string="Unit Type"
-                      widget="selection"/>
-                <field name="device_model_id" 
-                      required="True" 
-                      string="Device Model"
-                      widget="selection"/>
-                <field name="imei" 
-                      required="True" 
-                      string="Imei No"/>
-                <field name="serial" 
-                      required="True" 
-                      string="Serial No"/>
-              </group>
-              <group string="Customer Details" invisible="current_company_role in ('other','super_admin') and not branch_id">
-                  <field name="customer_id" 
-                      string="Customer"
-                      required="True" />
-                <field name="summary" 
-                      string="Summary"
-                      required="True" />
-                <field name="description" 
-                      string="Fault Description"
-                      required="True" />
-                <field name="purchase_date" 
-                      string="Date of Purchase"
-                      required="True" />
-              </group>
-            </group>
-        </sheet>
-      </form>
+                        <field name="client_id"
+                               widget="selection"
+                               domain="client_id_domain"
+                               readonly="client_id_read"
+                               required="current_company_role in ('super_admin', 'other', 'network', 'client')"/>
+
+                        <field name="branch_id"
+                               widget="selection"
+                               domain="[('company_type_role', '=', 'branch'), ('parent_id', '=', client_id)]"
+                               readonly="branch_id_read"
+                               invisible="current_company_role == 'branch'"
+                               required="current_company_role in ('super_admin', 'other', 'network', 'client', 'branch') or (current_company_role == 'service_provider' and is_custom_client == True)"/>
+                    </group>
+
+                    <group>
+                        <group string="Device Specifications" 
+                               invisible="current_company_role in ('other', 'super_admin') and not branch_id">
+                            <field name="device_condition" 
+                                   string="Product Condition"
+                                   required="1" 
+                                   widget="radio" 
+                                   options="{'horizontal': true}"/>
+                            <field name="manufacturer_id" 
+                                   string="Manufacturer"
+                                   required="1" 
+                                   widget="selection"/>
+                            <field name="allowed_unit_type_ids" 
+                                   invisible="1"/>
+                            <field name="unit_type_id" 
+                                   required="1" 
+                                   string="Unit Type"
+                                   widget="selection"/>
+                            <field name="device_model_id" 
+                                   required="1" 
+                                   string="Device Model"
+                                   widget="selection"/>
+                            <field name="imei" 
+                                   required="1" 
+                                   string="Imei No"/>
+                            <field name="serial" 
+                                   required="1" 
+                                   string="Serial No"/>
+                        </group>
+
+                        <group string="Customer Details" 
+                               invisible="current_company_role in ('other', 'super_admin') and not branch_id">
+                            <field name="customer_id" 
+                                   string="Customer"
+                                   required="1"/>
+                            <field name="summary" 
+                                   string="Summary"
+                                   required="1"/>
+                            <field name="description" 
+                                   string="Fault Description"
+                                   required="1"/>
+                            <field name="purchase_date" 
+                                   string="Date of Purchase"
+                                   required="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
       </field>
     </record>
+
+    <record id="action_repair_job_view_tree_rel" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="repair_clinic_job_view_list"/>
+        <field name="act_window_id" ref="repair_clinics_jobs_action"/>
+    </record>
+
+    <record id="action_repair_job_view_form_rel" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="repair_clinic_job_view_form"/>
+        <field name="act_window_id" ref="repair_clinics_jobs_action"/>
+    </record>
+
 </odoo>

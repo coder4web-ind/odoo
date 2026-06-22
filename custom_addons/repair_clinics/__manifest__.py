@@ -7,6 +7,7 @@
     'depends': ['base','repair_device','repair_status'],
     'author': 'Coder4web@yahoo.com',
     'data':[
+        'data/default_records.xml',
         'security/ir.model.access.csv',        
         'views/res_company_view.xml',
         'views/repair_job_view.xml',
