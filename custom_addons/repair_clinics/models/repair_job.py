@@ -7,6 +7,8 @@ from .repair_selection import (
     PRODUCT_CONDITION
 )
 import json
+from odoo.exceptions import ValidationError
+import re
 
 class RepairJob(models.Model):
     _name = "repair.job"
@@ -95,7 +97,11 @@ class RepairJob(models.Model):
         'res.partner', 
         string="Customer", 
         required=True,
-        domain="[('is_company', '=', False), ('user_ids', '=', False)]"
+        domain="["
+               "('is_company', '=', False), "
+               "('employee', '=', False), "
+               "('user_ids', '=', False)"
+               "]"
     )
     repair_type_id = fields.Many2one('repair.job.type', string="Diagnostic Classification", ondelete='cascade')
     device_condition = fields.Selection(PRODUCT_CONDITION, string="Product Condition", default='good')
@@ -225,3 +231,58 @@ class RepairJob(models.Model):
             record.network_id_read = role in ('network', 'client', 'branch', 'service_provider')
             record.client_id_read = role in ('client', 'branch')
             record.branch_id_read = role == 'branch'
+
+    @api.onchange('network_id')
+    def _onchange_network_reset_children(self):
+        """Top-down reset: clears sub-choices only if they don't match the new network choice"""
+        if self.network_id:
+            # 🎯 Safety Guard: Only clear the client if it belongs to a DIFFERENT network
+            if self.client_id and self.client_id.parent_id != self.network_id:
+                self.client_id = False
+                self.branch_id = False
+        else:
+            # If the network field itself is completely cleared, wipe out the branches/clients
+            self.client_id = False
+            self.branch_id = False
+
+    # =========================================================================
+    # 🔍 IMEI VALIDATION LOGIC (Luhn Checksum Formula)
+    # =========================================================================
+    def _is_valid_luhn_imei(self, imei_str):
+        """Mathematically verifies an IMEI string using the Mod 10 Luhn formula"""
+        if not imei_str or len(imei_str) != 15 or not imei_str.isdigit():
+            return False
+            
+        digits = [int(d) for d in imei_str]
+        # Step 1: Double every second digit from right to left starting from the 14th
+        for i in range(13, -1, -2):
+            doubled = digits[i] * 2
+            # Step 2: If result is > 9, add the digits together (e.g., 14 -> 1 + 4 = 5, or 14 - 9 = 5)
+            digits[i] = doubled if doubled <= 9 else doubled - 9
+            
+        # Step 3: Sum all values. If it divides cleanly by 10, the checksum balances
+        return sum(digits) % 10 == 0
+    
+    @api.onchange('imei')
+    def _onchange_imei_verify_format(self):
+        if self.imei:
+            clean_imei = re.sub(r'[\s-]','',self.imei)
+            self.imei = clean_imei
+            if not self._is_valid_luhn_imei(clean_imei):
+                return {
+                    'warning': {
+                        'title': "Invalid IMEI Format",
+                        'message': "The IMEI entered is invalid. Please double-check the 15-digit number. It fails the checksum calculation.",
+                        'type': 'notification'
+                    }
+                }
+
+    @api.constrains('imei')
+    def _check_imei_database_integrity(self):
+        for record in self:
+            if record.imei:
+                # Disallow any saves if the field calculation fails the check
+                if not record._is_valid_luhn_imei(record.imei):
+                    raise ValidationError(
+                        "Database Error: Cannot save record. The IMEI number '%s' is structurally malformed or failed the Luhn mathematical integrity check." % record.imei
+                    )

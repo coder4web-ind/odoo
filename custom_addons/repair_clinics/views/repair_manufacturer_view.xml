@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_manufacturer_form_inherit_repair" model="ir.ui.view">
+        <field name="name">repair.device.manufacturer.form.inherit</field>
+        <field name="model">repair.device.manufacturer</field>
+        <field name="inherit_id" ref="repair_device.view_repair_device_manufacturer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="job_type_ids" widget="many2many_tags" string="Allowed Job Types"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

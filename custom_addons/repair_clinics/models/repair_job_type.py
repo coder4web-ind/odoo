@@ -12,6 +12,13 @@ class RepairJobType(models.Model):
     serial_required = fields.Boolean("Serial Required", default=False)
     pop_validation = fields.Boolean("POP Validation",default=True)
     allow_exchange_unit = fields.Boolean("Allow Exchange Unit",default=False)
+    manufacturer_ids = fields.Many2many(
+        "repair.device.manufacturer",
+        "repair_job_type_manufacturer_rel",
+        "job_type_id",
+        "manufacturer_id",
+        string="Allowed Manufacturer"
+    )
 
     _unique_name = Constraint("unique(name)", "The name must be unique!")
     _unique_code = Constraint("unique(code)", "The code must be unique!")

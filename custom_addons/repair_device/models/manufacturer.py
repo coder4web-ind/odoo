@@ -10,6 +10,7 @@ class RepairDeviceManufacturer(models.Model):
     logo = fields.Binary("Logo")    
     pop_period = fields.Integer("POP Period")
     fault_code_required = fields.Boolean("Fault Code Required",default=False)
+    imei_required = fields.Boolean("IMEI Required",default=True)
     serial_no_required = fields.Boolean("Serial No Required",default=True)
     serial_no_format = fields.Char("Serial No Format",size=20)
     active = fields.Boolean(string="Active", default=True)

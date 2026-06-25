@@ -52,9 +52,9 @@
                         <field name="network_id_read" invisible="1"/>
                         <field name="client_id_read" invisible="1"/>
                         <field name="branch_id_read" invisible="1"/>
-                        <field name="current_company_role" invisible="0"/>
+                        <field name="current_company_role" invisible="1"/>
                         <field name="client_id_domain" invisible="1"/>
-                        <field name="is_custom_client" invisible="0"/>
+                        <field name="is_custom_client" invisible="1"/>
 
                         <field name="network_id"
                                widget="selection"

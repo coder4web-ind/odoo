@@ -10,6 +10,7 @@
         'data/default_records.xml',
         'security/ir.model.access.csv',        
         'views/res_company_view.xml',
+        'views/repair_manufacturer_view.xml',
         'views/repair_job_view.xml',
         'views/repair_job_type.xml',
         'views/menus/repair_clinics_menu.xml',
