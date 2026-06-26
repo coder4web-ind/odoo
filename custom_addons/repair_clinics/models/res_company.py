@@ -9,6 +9,12 @@ class ResCompany(models.Model):
         required=True, 
         index=True
     )
+
+    manufacturer_rel_ids = fields.One2many(
+        'repair.company.manufacturer.rel', 
+        'company_id', 
+        string="Linked Manufacturers"
+    )
     
     def _get_company_type_role_selection(self):
         options = [

@@ -5,9 +5,33 @@
         <field name="model">repair.device.manufacturer</field>
         <field name="inherit_id" ref="repair_device.view_repair_device_manufacturer_form"/>
         <field name="arch" type="xml">
+            
             <xpath expr="//field[@name='name']" position="after">
                 <field name="job_type_ids" widget="many2many_tags" string="Allowed Job Types"/>
             </xpath>
+
+            <xpath expr="//form/sheet/group" position="after">
+                <notebook>
+                    <page string="Service Provider Credentials &amp; Settings">
+                        <field name="company_rel_ids" />
+                    </page>
+                </notebook>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="view_repair_company_manufacturer_rel_tree" model="ir.ui.view">
+        <field name="name">repair.company.manufacturer.rel.list</field>
+        <field name="model">repair.company.manufacturer.rel</field>
+        <field name="arch" type="xml">
+            <list string="Companies" editable="bottom">
+                <field name="company_id"/>
+                <field name="account_no"/>
+                <field name="communication"/>
+                <field name="comm_user_name"/>
+                <field name="comm_password" password="True"/>
+                <field name="token"/>
+            </list>
         </field>
     </record>
 </odoo>

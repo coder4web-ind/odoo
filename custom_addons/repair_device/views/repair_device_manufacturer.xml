@@ -21,7 +21,7 @@
       <form string="New Job" create="1" edit="0">
         <header>
             <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Save"/>
-            <button special="cancel" class="btn btn-danger" icon="fa-trash" string="Cancel"/>
+            <button special="cancel"  class="btn btn-danger"  icon="fa-arrow-left"  string="Cancel"/>
         </header>
         <sheet>
           <group string="Global Manufacturer Configuration">

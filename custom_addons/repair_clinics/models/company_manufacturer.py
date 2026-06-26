@@ -5,7 +5,13 @@ class RepairCompanyManufacturerRel(models.Model):
     _name = "repair.company.manufacturer.rel"
     _description = "Company Specific Manufacturer Details"
     _rec_name = "manufacturer_id" 
-    company_id = fields.Many2one("res.company", string="Service Provider", required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        "res.company", 
+        string="Service Provider", 
+        required=True, 
+        default=lambda self: self.env.company,
+        domain="[('company_type_role','=','service_provider')]"
+    )
     manufacturer_id = fields.Many2one("repair.device.manufacturer", string="Manufacturer", required=True, ondelete='cascade')
     communication = fields.Selection([
         ("enabled", "Enabled"),
