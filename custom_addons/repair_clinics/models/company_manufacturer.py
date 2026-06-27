@@ -8,8 +8,7 @@ class RepairCompanyManufacturerRel(models.Model):
     company_id = fields.Many2one(
         "res.company", 
         string="Service Provider", 
-        required=True, 
-        default=lambda self: self.env.company,
+        required=True,        
         domain="[('company_type_role','=','service_provider')]"
     )
     manufacturer_id = fields.Many2one("repair.device.manufacturer", string="Manufacturer", required=True, ondelete='cascade')

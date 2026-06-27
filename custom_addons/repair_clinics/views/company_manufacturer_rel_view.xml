@@ -51,11 +51,12 @@
                         string="Edit"
                         title="Open in Popup Form"/>
                 <field name="company_id"/>
-                <field name="account_no"/>
+                <field name="contact_person"/>
+                <field name="mobile"/>
+                <field name="email"/>
+                <field name="city"/>
                 <field name="communication"/>
-                <field name="comm_user_name"/>
-                <field name="comm_password" password="True"/>
-                <field name="token"/>
+                <field name="active"/>                
             </list>            
         </field>
     </record>
