@@ -35,3 +35,26 @@ class RepairCompanyManufacturerRel(models.Model):
 
     
     _unique_company_manufacturer = UniqueIndex("(company_id, manufacturer_id)")
+
+    def action_open_popup(self):
+        """ Opens the row inside a popup while safely preserving the relationship link """
+        self.ensure_one()
+        
+        # 1. Safely find the parent manufacturer ID
+        # If it's a new line, pull it from the active context window
+        manufacturer_id = self.manufacturer_id.id or self.env.context.get('active_id')
+        
+        # 2. Return the window action layout dynamically
+        return {
+            'name': 'Service Provider Details',
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,  # Passes the exact row ID if it exists (False if it's a new line)
+            'view_mode': 'form',
+            'view_id': self.env.ref('repair_clinics.repair_clinic_comapany_manufacturer_rel_form').id,
+            'target': 'new',    # Forces it into a modal popup dialog box
+            'context': {
+                **self.env.context,
+                'default_manufacturer_id': manufacturer_id,  # Guarantees the link is never lost!
+            }
+        }
