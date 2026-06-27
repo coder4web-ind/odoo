@@ -14,8 +14,8 @@
         </field>
     </record>
 
-    <record id="view_repair_device_manufacturer_form" model="ir.ui.view">
-      <field name="name">repair.device.manufacturer.form</field>
+    <record id="view_repair_device_manufacturer_create_form" model="ir.ui.view">
+      <field name="name">repair.device.manufacturer.create.form</field>
       <field name="model">repair.device.manufacturer</field> 
       <field name="arch" type="xml">
       <form string="New Job" create="1" edit="0">
@@ -45,4 +45,37 @@
       </form>
       </field>
     </record>
+
+    <record id="view_repair_device_manufacturer_edit_form" model="ir.ui.view">
+      <field name="name">repair.device.manufacturer.edit.form</field>
+      <field name="model">repair.device.manufacturer</field> 
+      <field name="arch" type="xml">
+      <form string="New Job" create="0" edit="1">
+        <header>
+            <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Save"/>
+            <button special="cancel"  class="btn btn-danger"  icon="fa-arrow-left"  string="Cancel"/>
+        </header>
+        <sheet>
+          <group string="Global Manufacturer Configuration">
+            <group>
+                <field name="logo" widget="image" class="oe_avatar"/>
+                <field name="name" string="Manufacturer"/>
+                <field name="acronym" string="Acronym"/>
+                <field name="etd_date_enabled" string="Estimated Time of Delivery Enabled" />
+                <field name="etd_date_days" string="Estimated Time of Delivery (days)" />
+                <field name="active"/>
+            </group>
+            <group>              
+                <field name="imei_required" string="Imei Required" />
+                <field name="serial_no_required" string="Serial No Required"  />
+                <field name="serial_no_format" string="Serial No Format" help="use X for numeric,A for Alphabats,N for alphanumeric,and if any special chracter like -,#,@" />
+                <field name="pop_period" string="Proof of Purchase Period" />
+                <field name="fault_code_required" string="Is fault code Period" />
+            </group>
+          </group>          
+        </sheet>
+      </form>
+      </field>
+    </record>
+
 </odoo>
