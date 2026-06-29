@@ -2,4 +2,3 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_repair_device_manufacturer,access_repair_device_manufacturer,model_repair_device_manufacturer,base.group_user,1,1,1,1
 access_repair_device_unit_type,access_repair_device_unit_type,model_repair_device_unit_type,base.group_user,1,1,1,1
 access_repair_device_model,access_repair_device_model,model_repair_device_model,base.group_user,1,1,1,1
-access_repair_company_model_rel,access_repair_company_model_rel,model_repair_company_model_rel,base.group_user,1,1,1,1

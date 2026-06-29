@@ -9,7 +9,7 @@ class RepairDeviceModel(models.Model):
     description = fields.Text("Model Description")
     code = fields.Char("Model Code", size=64, required=True)
     manufacturer_id = fields.Many2one("repair.device.manufacturer", string="Manufacturer", required=True)
-    unit_type_id = fields.Many2one("repair.device.unit.type",string="Unit Type", required=True)
+    device_type_id = fields.Many2one("repair.device.unit.type",string="Unit Type", required=True)
     imei_required = fields.Boolean("IMEI Required", default=False)
     imei_length = fields.Integer("IMEI Length", default=15)
     serialno_required = fields.Boolean("Serial No Required", default=True)
@@ -23,7 +23,7 @@ class RepairDeviceModel(models.Model):
 # 🎯 FIXED ODOO 19 INDEXES (Explicit SQL Expressions, No Message String)
 # =========================================================================
 _unique_manufacturer_code = UniqueIndex("(manufacturer_id, code)")
-_unique_unit_type_code = UniqueIndex("(unit_type_id, code)")
+_unique_unit_type_code = UniqueIndex("(device_type_id, code)")
 
 
 _index_name_idx = Index("(name)") 
