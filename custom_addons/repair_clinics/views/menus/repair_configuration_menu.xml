@@ -3,10 +3,11 @@
     <menuitem id="repair_clinics_configuration_category" 
               name="Configuration"
               parent="repair_clinics_menu_root"
-              sequence="11"/>    
+              groups="base.group_system"
+              sequence="100"/>    
     <menuitem id="repair_device_manufacturer_list" 
               name="Manufacturers"
               parent="repair_clinics_configuration_category" 
               action="repair_device.repair_device_manufacturer_action"
-              sequence="11"/>
+              sequence="10"/>
 </odoo>

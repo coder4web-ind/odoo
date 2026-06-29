@@ -38,7 +38,6 @@
                 <field name="serial_no_required" string="Serial No Required"  />
                 <field name="serial_no_format" string="Serial No Format" help="use X for numeric,A for Alphabats,N for alphanumeric,and if any special chracter like -,#,@" />
                 <field name="pop_period" string="Proof of Purchase Period" />
-                <field name="fault_code_required" string="Is fault code Period" />
             </group>
           </group>          
         </sheet>

@@ -19,9 +19,6 @@ class RepairDeviceModel(models.Model):
     etd_date_days = fields.Integer("ETD date days")
     pop_period = fields.Integer("POP Period")
     
-    # =========================================================================
-# 🎯 FIXED ODOO 19 INDEXES (Explicit SQL Expressions, No Message String)
-# =========================================================================
 _unique_manufacturer_code = UniqueIndex("(manufacturer_id, code)")
 _unique_unit_type_code = UniqueIndex("(device_type_id, code)")
 

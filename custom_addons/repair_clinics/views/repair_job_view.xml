@@ -49,14 +49,14 @@
                     <group>
                         <group string="Device Specifications" >
                             <field name="manufacturer_id" 
-                                   string="Manufacturer"
+                                   string="Brand"
                                    required="1" 
                                    widget="selection"/>
                             <field name="allowed_unit_type_ids" 
                                    invisible="1"/>
                             <field name="device_type_id" 
                                    required="1" 
-                                   string="Unit Type"
+                                   string="Device Type"
                                    widget="selection"/>
                             <field name="device_model_id" 
                                    required="1" 
