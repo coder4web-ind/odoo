@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="repair_device_unit_type_action" model="ir.actions.act_window">
+        <field name="name">View Device Type</field>        
+        <field name="res_model">repair.device.unit.type</field>
+        <field name="view_mode">list,form</field>        
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Device Unit Type
+          </p>
+          <p>
+            Use device Unit Type details to book a job using IMEI or Serial No.
+          </p>
+        </field>
+    </record>
+
+    <record id="repair_device_unit_type_view_list" model="ir.ui.view"> 
+      <field name="name">repair.device.unit.type.list</field>
+      <field name="model">repair.device.unit.type</field> 
+      <field name="arch" type="xml">
+        <list string="Repair Device Unit Type Grid">
+          <field name="name" string="Name"/>          
+          <field name="imei_required" string="Imei Required"/>
+          <field name="serial_no_required" string="Serial No Required"/>
+          <field name="dop_warranty_period" string="Warranty Period"/>          
+        </list>
+      </field>
+    </record>
+
+    <record id="view_repair_device_unit_type_form" model="ir.ui.view">
+      <field name="name">repair.device.unit.type.form</field>
+      <field name="model">repair.device.unit.type</field> 
+      <field name="arch" type="xml">
+      <form string="New Device Unit Type" create="1" edit="1">
+        <header>
+            <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Save"/>
+            <button special="cancel"  class="btn btn-danger"  icon="fa-arrow-left"  string="Cancel"/>
+        </header>
+        <sheet>
+          <group string="Global Device Model Configuration">
+            <group>                
+                <field name="name" string="Device Model"/>
+                <field name="imei_required" string="Imei Required" />
+                <field name="serial_no_required" string="Serial No Required"  />
+                <field name="serial_no_format" string="Serial No Format" help="use X for numeric,A for Alphabats,N for alphanumeric,and if any special chracter like -,#,@" />                
+            </group>
+            <group>              
+                
+                <field name="dop_warranty_period" string="Warranty Period from Purchase (Months)" />
+                <field name="ranking" string="Ranking" />
+                <field name="active"/>
+            </group>
+          </group>          
+        </sheet>
+      </form>
+      </field>
+    </record>
+</odoo>

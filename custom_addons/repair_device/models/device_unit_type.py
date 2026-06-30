@@ -6,13 +6,12 @@ class RepairDeviceUnityType(models.Model):
     _order = "ranking desc, name asc"
     
     # Core Data Schema Columns
+    ranking = fields.Integer(string="Ranking Priority", default=0)
     name = fields.Char("Device Type Name", size=64, required=True)
-    imei_required = fields.Selection([("yes", "Yes"), ("no", "No")], string="IMEI Required",default=False)
-    serial_no_required = fields.Selection([("yes", "Yes"), ("no", "No")], string="Serial No Required",default=False)
+    imei_required = fields.Selection([("yes", "Yes"), ("no", "No")], string="IMEI Required",default='no')
+    serial_no_required = fields.Selection([("yes", "Yes"), ("no", "No")], string="Serial No Required",default='no')
     serial_no_format = fields.Char("Pattern for Serial No", size=20)
-    dop_warranty_period = fields.Integer(string="Warranty Period from Purchase (Months)", default=12)
-    default_tat = fields.Integer(string="Default Turnaround Target (Days)", default=3)
-    ranking = fields.Integer(string="Priority Ranking Order", default=0)
+    dop_warranty_period = fields.Integer(string="Warranty Period from Purchase (Months)", default=12)    
     active = fields.Boolean(string="Active", default=True)
 
     

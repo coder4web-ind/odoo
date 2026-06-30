@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_repair_job_type,access_repair_job_type,model_repair_job_type,base.group_user,1,1,1,1
+access_repair_job_status_line,access_repair_job_status_line,model_repair_job_status_line,base.group_user,1,1,1,1
+access_repair_job,access_repair_job,model_repair_job,base.group_user,1,1,1,1
+access_repair_company_manufacturer_rel,access_repair_company_manufacturer_rel,model_repair_company_manufacturer_rel,base.group_user,1,1,1,1
+access_repair_company_model_rel,access_repair_company_model_rel,model_repair_company_model_rel,base.group_user,1,1,1,1

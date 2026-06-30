@@ -4,17 +4,19 @@
     'category': 'Services/Repair',
     'sequence': 5,
     'summary': 'Core Booking & Device Tracking for Electronic Gadgets',
-    'depends': ['base','account','mail','repair_device'],
+    'depends': ['base','mail'],
     'author': 'Coder4web@yahoo.com',
-    'data':[
-        
-        'security/ir.model.access.csv',        
-        'views/repair_job_view.xml',        
+    'data': [
+        'security/ir.model.access.csv',
+        'views/repair_manufacturer.xml',
+        'views/repair_unit_type.xml',   
+        'views/repair_model.xml', 
+        'views/repair_job_view.xml',
         'views/menus/repair_clinics_menu.xml',
-        'views/menus/repair_configuration_menu.xml'
+        'views/menus/repair_configuration_menu.xml',
     ],
     'installable': True,
     'auto_install': False,
     'application': True,
-    'license': 'LGPL-3',
+    'license': 'OPL-1',
 }

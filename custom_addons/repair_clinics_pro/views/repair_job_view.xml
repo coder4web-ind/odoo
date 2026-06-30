@@ -21,10 +21,9 @@
       <field name="arch" type="xml">
         <list string="Repair Jobs Grid">
           <field name="id" string="Job ID"/>
-          <field name="repair_type_id" string="Repair Type"/>
           <field name="customer_id" string="Customer"/>
           <field name="manufacturer_id" string="Manufacturer"/>
-          <field name="unit_type_id" string="Unit Type"/>
+          <field name="device_type_id" string="Unit Type"/>
           <field name="device_model_id" string="Model"/>
           <field name="imei" string="Imei No"/>
           <field name="serial" string="Serial No"/>
@@ -47,68 +46,37 @@
                     <div class="oe_title">
                         <h1>New Job</h1>
                     </div>
-
-                    <group string="Client and Branch Details">
-                        <field name="network_id_read" invisible="1"/>
-                        <field name="client_id_read" invisible="1"/>
-                        <field name="branch_id_read" invisible="1"/>
-                        <field name="current_company_role" invisible="1"/>
-                        <field name="client_id_domain" invisible="1"/>
-                        <field name="is_custom_client" invisible="1"/>
-
-                        <field name="network_id"
-                               widget="selection"
-                               readonly="network_id_read"
-                               required="current_company_role in ('other', 'super_admin')"/>
-
-                        <field name="client_id"
-                               widget="selection"
-                               domain="client_id_domain"
-                               readonly="client_id_read"
-                               required="current_company_role in ('super_admin', 'other', 'network', 'client')"/>
-
-                        <field name="branch_id"
-                               widget="selection"
-                               domain="[('company_type_role', '=', 'branch'), ('parent_id', '=', client_id)]"
-                               readonly="branch_id_read"
-                               invisible="current_company_role == 'branch'"
-                               required="current_company_role in ('super_admin', 'other', 'network', 'client', 'branch') or (current_company_role == 'service_provider' and is_custom_client == True)"/>
-                    </group>
-
                     <group>
-                        <group string="Device Specifications" 
-                               invisible="current_company_role in ('other', 'super_admin') and not branch_id">
-                            <field name="device_condition" 
-                                   string="Product Condition"
-                                   required="1" 
-                                   widget="radio" 
-                                   options="{'horizontal': true}"/>
+                        <group string="Device Specifications" >
                             <field name="manufacturer_id" 
-                                   string="Manufacturer"
+                                   string="Brand"
                                    required="1" 
                                    widget="selection"/>
                             <field name="allowed_unit_type_ids" 
                                    invisible="1"/>
-                            <field name="unit_type_id" 
+                            <field name="device_type_id" 
                                    required="1" 
-                                   string="Unit Type"
+                                   string="Device Type"
                                    widget="selection"/>
                             <field name="device_model_id" 
                                    required="1" 
                                    string="Device Model"
                                    widget="selection"/>
+                            <field name="imei_required" invisible="1"/>
+                            <field name="serial_required" invisible="1"/>
+
                             <field name="imei" 
-                                   required="1" 
+                                   required="imei_required" 
                                    string="Imei No"/>
                             <field name="serial" 
-                                   required="1" 
+                                   required="serial_required != False"
                                    string="Serial No"/>
                         </group>
 
-                        <group string="Customer Details" 
-                               invisible="current_company_role in ('other', 'super_admin') and not branch_id">
+                        <group string="Customer Details" >
                             <field name="customer_id" 
                                    string="Customer"
+                                   domain="[('user_ids', '=', False),('is_company', '=', False)]"
                                    required="1"/>
                             <field name="summary" 
                                    string="Summary"

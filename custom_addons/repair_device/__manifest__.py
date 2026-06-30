@@ -8,6 +8,7 @@
         'security/ir.model.access.csv',
         'security/repair_security.xml',
         'views/repair_device_manufacturer.xml',
+        'views/reapir_device_type.xml',
         'views/reapir_device_model.xml'
     ],
     'author': 'Coder4web@yahoo.com',
