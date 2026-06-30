@@ -18,7 +18,9 @@ class RepairJob(models.Model):
     device_type_id = fields.Many2one("repair.device.unit.type", string="Unit Type", required=True, domain="[('id', 'in', allowed_unit_type_ids)]")
     device_model_id = fields.Many2one("repair.device.model", string="Device Model", required=True, domain="[('manufacturer_id', '=', manufacturer_id), ('device_type_id', '=', device_type_id)]")
     
-    
+    imei_required = fields.Boolean(compute='_compute_imei_serial_required', store=False)
+    serial_required = fields.Char(compute='_compute_imei_serial_required', store=False)
+
     imei = fields.Char('IMEI', size=16)
     serial = fields.Char('Serial No', size=64)
 
@@ -41,6 +43,32 @@ class RepairJob(models.Model):
     # =========================================================================
     # 📱 COMPUTE & CASCADING RE-SETS
     # =========================================================================
+
+    @api.depends('manufacturer_id', 'device_type_id', 'device_model_id')
+    def _compute_imei_serial_required(self):
+        for rec in self:            
+            imei_req = False
+            if rec.device_model_id and getattr(rec.device_model_id, 'imei_required', False):
+                imei_req = rec.device_model_id.imei_required
+            elif rec.device_type_id and getattr(rec.device_type_id, 'imei_required', False):
+                imei_req = rec.device_type_id.imei_required
+            elif rec.manufacturer_id and getattr(rec.manufacturer_id, 'imei_required', False): 
+                imei_req = rec.manufacturer_id.imei_required
+
+            serial_mask = False
+            if rec.device_model_id and getattr(rec.device_model_id, 'serialno_required', True) and rec.device_model_id.serial_no_format:
+                serial_mask = rec.device_model_id.serial_no_format
+            elif rec.device_type_id and getattr(rec.device_type_id, 'serialno_required', True) and rec.device_type_id.serial_no_format:
+                serial_mask = rec.device_type_id.serial_no_format
+            elif rec.manufacturer_id and getattr(rec.manufacturer_id, 'serialno_required', True) and rec.manufacturer_id.serial_no_format:
+                serial_mask = rec.manufacturer_id.serial_no_format
+            
+            rec.imei_required = imei_req
+            rec.serial_required = serial_mask
+
+
+    
+
     @api.depends('manufacturer_id')
     def _compute_allowed_unit_types(self):
         for rec in self:
@@ -125,65 +153,48 @@ class RepairJob(models.Model):
     @api.constrains('serial', 'device_model_id', 'device_type_id', 'manufacturer_id')
     def _check_serial_format_fallback(self):
         for record in self:
-            if not record.serial:
-                continue
-
-            serial_mask = False
-            if record.device_model_id and getattr(record.device_model_id, 'serialno_required', True) and record.device_model_id.serial_no_format:
-                serial_mask = record.device_model_id.serial_no_format
-            elif record.device_type_id and getattr(record.device_type_id, 'serialno_required', True) and record.device_type_id.serial_no_format:
-                serial_mask = record.device_type_id.serial_no_format
-            elif record.manufacturer_id and getattr(record.manufacturer_id, 'serialno_required', True) and record.manufacturer_id.serial_no_format:
-                serial_mask = record.manufacturer_id.serial_no_format
-
-            # 2. Validate using the mask translator
-            if serial_mask:
-                # Transform friendly string "AA-NNNN" -> RegEx rule
-                regex_pattern = record._convert_mask_to_regex(serial_mask)
-                
-                pattern = re.compile(rf"^{regex_pattern}$")
-                if not pattern.match(record.serial):
-                    raise ValidationError(
-                        "Invalid Serial Number Format!\n\n"
-                        "The serial '%s' does not match the required configuration layout mask: '%s'.\n\n"
-                        "Format Guide:\n"
-                        "• A = Letters only\n"
-                        "• N = Numbers only\n"
-                        "• X = Alphanumeric (Letters/Numbers)" 
-                        % (record.serial, serial_mask)
-                    )
+            # 🎯 FIX: If a mask layout is configured, make sure they don't leave it blank!
+            if record.serial_required and not record.serial:
+                raise ValidationError("Operation Aborted: A serial number matching the mask '%s' is required." % record.serial_required)
+            
+            if record.serial:
+                if record.serial_required:                   
+                    regex_pattern = record._convert_mask_to_regex(record.serial_required)
+                    pattern = re.compile(rf"^{regex_pattern}$")
+                    if not pattern.match(record.serial):
+                        raise ValidationError(
+                            "Invalid Serial Number Format!\n\n"
+                            "The serial '%s' does not match the required configuration layout mask: '%s'.\n\n"
+                            "Format Guide:\n"
+                            "• A = Letters only\n"
+                            "• N = Numbers only\n"
+                            "• X = Alphanumeric (Letters/Numbers)" 
+                            % (record.serial, record.serial_required)
+                        )
                 
 
     @api.constrains('imei', 'device_model_id', 'device_type_id', 'manufacturer_id')
     def _check_imei_database_integrity(self):
-        for record in self:
-            if record.imei:
+        for record in self:            
+            if record.imei_required and not record.imei:
+                raise ValidationError("Operation Aborted: An IMEI number is required for this type of device.")
 
-                imei_required = False
-                if record.device_model_id and getattr(record.device_model_id, 'imei_required', True):
-                    imei_required = record.device_model_id.imei_required
-                elif record.device_type_id and getattr(record.device_type_id, 'imei_required', True):
-                    imei_required = record.device_type_id.imei_required
-                elif record.manufacturer_id and getattr(record.manufacturer_id, 'imei_required', True): 
-                    imei_required = record.manufacturer_id.imei_required
+            if record.imei:                
+                if not record._is_valid_luhn_imei(record.imei):
+                    raise ValidationError(
+                        "Database Error: The IMEI number '%s' is structurally malformed or failed the Luhn mathematical check." % record.imei
+                    )
                 
+                check_job_exist = self.env['repair.job'].search_count([
+                    ('id', '!=', record.id),
+                    ('imei', '=', record.imei),
+                    ('repair_complete_date', '=', False)
+                ])
 
-                if imei_required:
-                    if not record._is_valid_luhn_imei(record.imei):
-                        raise ValidationError(
-                            "Database Error: The IMEI number '%s' is structurally malformed or failed the Luhn mathematical check." % record.imei
-                        )
-                    
-                    check_job_exist = self.env['repair.job'].search_count([
-                        ('id', '!=', record.id),
-                        ('imei', '=', record.imei),
-                        ('repair_complete_date', '=', False)
-                    ])
-
-                    if check_job_exist:
-                        raise ValidationError(
-                            "Operation Aborted: A repair job is already open for IMEI: %s" % record.imei
-                        )
+                if check_job_exist:
+                    raise ValidationError(
+                        "Operation Aborted: A repair job is already open for IMEI: %s" % record.imei
+                    )
                 
                 
     @api.constrains('serial')

@@ -62,17 +62,21 @@
                                    required="1" 
                                    string="Device Model"
                                    widget="selection"/>
+                            <field name="imei_required" invisible="1"/>
+                            <field name="serial_required" invisible="1"/>
+
                             <field name="imei" 
-                                   required="1" 
+                                   required="imei_required" 
                                    string="Imei No"/>
                             <field name="serial" 
-                                   required="1" 
+                                   required="serial_required != False"
                                    string="Serial No"/>
                         </group>
 
                         <group string="Customer Details" >
                             <field name="customer_id" 
                                    string="Customer"
+                                   domain="[('user_ids', '=', False),('is_company', '=', False)]"
                                    required="1"/>
                             <field name="summary" 
                                    string="Summary"
