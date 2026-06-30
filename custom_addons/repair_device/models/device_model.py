@@ -12,7 +12,7 @@ class RepairDeviceModel(models.Model):
     device_type_id = fields.Many2one("repair.device.unit.type",string="Unit Type", required=True)
     imei_required = fields.Boolean("IMEI Required", default=False)
     imei_length = fields.Integer("IMEI Length", default=15)
-    serialno_required = fields.Boolean("Serial No Required", default=True)
+    serial_no_required = fields.Boolean("Serial No Required", default=True)
     serial_no_format = fields.Char("Pattern for Serial No", size=20)
     active = fields.Boolean(string="Active", default=True)
     etd_date_enabled = fields.Boolean("ETD date enabled",default=True)

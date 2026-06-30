@@ -7,7 +7,7 @@ class RepairDeviceManufacturer(models.Model):
 
     name = fields.Char("Manufacturer Name",size=64,required=True)
     acronym = fields.Char("Acronym",size=64,required=True)
-    logo = fields.Binary("Logo")    
+    logo = fields.Binary("Logo")
     pop_period = fields.Integer("POP Period")    
     imei_required = fields.Boolean("IMEI Required",default=True)
     serial_no_required = fields.Boolean("Serial No Required",default=True)

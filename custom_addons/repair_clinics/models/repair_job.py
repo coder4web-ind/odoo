@@ -56,11 +56,11 @@ class RepairJob(models.Model):
                 imei_req = rec.manufacturer_id.imei_required
 
             serial_mask = False
-            if rec.device_model_id and getattr(rec.device_model_id, 'serialno_required', True) and rec.device_model_id.serial_no_format:
+            if rec.device_model_id and getattr(rec.device_model_id, 'serial_no_required', True) and rec.device_model_id.serial_no_format:
                 serial_mask = rec.device_model_id.serial_no_format
-            elif rec.device_type_id and getattr(rec.device_type_id, 'serialno_required', True) and rec.device_type_id.serial_no_format:
+            elif rec.device_type_id and getattr(rec.device_type_id, 'serial_no_required', True) and rec.device_type_id.serial_no_format:
                 serial_mask = rec.device_type_id.serial_no_format
-            elif rec.manufacturer_id and getattr(rec.manufacturer_id, 'serialno_required', True) and rec.manufacturer_id.serial_no_format:
+            elif rec.manufacturer_id and getattr(rec.manufacturer_id, 'serial_no_required', True) and rec.manufacturer_id.serial_no_format:
                 serial_mask = rec.manufacturer_id.serial_no_format
             
             rec.imei_required = imei_req

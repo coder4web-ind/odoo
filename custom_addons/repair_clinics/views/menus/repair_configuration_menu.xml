@@ -10,4 +10,9 @@
               parent="repair_clinics_configuration_category" 
               action="repair_device.repair_device_manufacturer_action"
               sequence="10"/>
+    <menuitem id="repair_device_model_list" 
+              name="Device Model"
+              parent="repair_clinics_configuration_category" 
+              action="repair_device.repair_device_model_action"
+              sequence="10"/>
 </odoo>
