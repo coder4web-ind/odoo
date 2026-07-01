@@ -16,7 +16,5 @@
               name="Configuration"
               parent="repair_clinics_menu_root"
               sequence="11"/>
-    <record id="base.menu_management" model="ir.ui.menu">        
-        <field name="group_ids" eval="[(6, 0, [ref('base.group_system')])]"/>
-    </record>
+    
 </odoo>
