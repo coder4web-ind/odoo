@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="view_repair_job_search" model="ir.ui.view">
+        <field name="name">repair.job.search</field>
+        <field name="model">repair.job</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Ticket #"/>
+                <field name="summary"/>
+                <field name="customer_id"/>
+                <field name="imei"/>
+                <field name="serial"/>
+
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="filter_repairing" domain="[('state', '=', 'repairing')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="group_by_customer" context="{'group_by': 'customer_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Manufacturer" name="group_by_manufacturer" context="{'group_by': 'manufacturer_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="repair_clinics_jobs_action" model="ir.actions.act_window">
         <field name="name">View Jobs</field>        
         <field name="res_model">repair.job</field>
         <field name="view_mode">list,form</field>        
+        <field name="search_view_id" ref="view_repair_job_search"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Book a new repair job
@@ -80,7 +104,6 @@
                             <field name="summary" 
                                    string="Summary"
                                    required="1"/>                            
-                            
                         </group>
                     </group>
                 </sheet>

@@ -33,6 +33,7 @@ class RepairJob(models.Model):
     ], default='draft', tracking=True)    
     cancel_reason = fields.Text('Cancel Reason')
     repair_complete_date = fields.Datetime("Date of Repair Complete")
+    active = fields.Boolean(string="Active", default=True)
 
     # =========================================================================
     # 📱 COMPUTE & CASCADING RE-SETS
