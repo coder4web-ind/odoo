@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  odoo-net:
+    driver: bridge
+
+services:
+  web:
+    image: odoo19-local
+    container_name: odoo19-server
+    ports:
+      - "8069:8069"
+      - "8072:8072" # Longpolling port if needed later
+    volumes:
+      - .:/workspace:Z
+    command: python3 odoo-bin -c odoo.conf
+    networks:
+      - odoo-net
+    depends_on:
+      - db
+
+  db:
+    image: docker.io/library/postgres:15
+    container_name: odoo19-db
+    environment:
+      - POSTGRES_USER=odoo19
+      - POSTGRES_PASSWORD=Admin@1234
+      - POSTGRES_DB=postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - odoo-net
