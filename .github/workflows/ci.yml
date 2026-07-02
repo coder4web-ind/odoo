@@ -1,11 +1,10 @@
 name: Odoo Module Integration Test
 
-# 👇 Triggers the pipeline automatically on every push or pull request to the main branch
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, "19.0" ] # 👈 Add your Odoo version branch here
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, "19.0" ]
 
 jobs:
   build-and-test:
