@@ -1,4 +1,4 @@
-name: Odoo Module Integration Test
+name: Odoo Module Integration Testing
 
 on:
   push:
