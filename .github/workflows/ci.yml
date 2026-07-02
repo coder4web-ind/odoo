@@ -38,9 +38,17 @@ jobs:
           docker build -t odoo-ci-runner:latest -f Dockerfile .
 
       # 3. Execute an automated sanity test using Odoo's internal compiler
+      # 3. Execute an automated sanity test using Odoo's internal compiler
       - name: Run Odoo Module Integration Test
         run: |
           docker run --rm \
             --network=host \
             odoo-ci-runner:latest \
-            python3 odoo-bin -d postgres --db_host=127.0.0.1 --db_port=5432 -i repair_clinics --stop-after-init
+            python3 odoo-bin \
+              -d postgres \
+              --db_host=127.0.0.1 \
+              --db_port=5432 \
+              --db_user=odoo19 \
+              --db_password=Admin@123 \
+              -i repair_clinics \
+              --stop-after-init
