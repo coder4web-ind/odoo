@@ -35,7 +35,7 @@ jobs:
       # 2. Build the Podman container using your project's Containerfile/Dockerfile
       - name: Build Odoo Image
         run: |
-          docker build -t odoo-ci-runner:latest -f Containerfile .
+          docker build -t odoo-ci-runner:latest -f Dockerfile .
 
       # 3. Execute an automated sanity test using Odoo's internal compiler
       - name: Run Odoo Module Installation Test
