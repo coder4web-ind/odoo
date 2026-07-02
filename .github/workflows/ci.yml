@@ -33,15 +33,15 @@ jobs:
         uses: actions/checkout@v4
 
       # 2. Build the Podman container using your project's Containerfile/Dockerfile
-      - name: Build Podman Odoo Image
+      - name: Build Odoo Image
         run: |
-          podman build -t odoo-ci-runner:latest -f Containerfile .
+          docker build -t odoo-ci-runner:latest -f Containerfile .
 
       # 3. Execute an automated sanity test using Odoo's internal compiler
       - name: Run Odoo Module Installation Test
         run: |
-          podman run --rm \
-            -v .:/workspace:Z \
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
             --network=host \
             odoo-ci-runner:latest \
             python3 odoo-bin -c odoo.conf -d postgres --db_host=127.0.0.1 --db_port=5432 -i repair_clinics --stop-after-init
