@@ -10,7 +10,7 @@ class RepairJob(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char('Ticket #', default='New', readonly=True, copy=False)
-    summary = fields.Text('Summary', size=256, required=True)
+    summary = fields.Text('Summary', required=True)
     customer_id = fields.Many2one('res.partner', string="Customer", required=True)
     
     manufacturer_id = fields.Many2one("repair.manufacturer", string="Device Manufacturer", required=True)
