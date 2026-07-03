@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>    
+<odoo>
+    <record id="view_repair_job_search" model="ir.ui.view">
+        <field name="name">repair.job.search</field>
+        <field name="model">repair.job</field>
+        <field name="arch" type="xml">
+            <search string="Repair Jobs">
+              <field name="imei" string="Imei" />
+              <field name="serial" string="Serial" />
+              <field name="manufacturer_id" string="Manufacturer" />
+              <field name="device_type_id" string="Device Type" />
+              <field name="device_model_id" string="Device Model" />              
+              <separator/>              
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <filter string="Apple Devices" name="brand_apple" domain="['|',('manufacturer_id.name', 'ilike', 'Apple'),('manufacturer_id.acronym', 'ilike', 'Apple')]"/>
+                <filter string="Samsung Devices" name="brand_samsung" domain="['|',('manufacturer_id.name', '=', 'Samsung'),('manufacturer_id.acronym', '=', 'Samsung')]"/>
+                <filter string="Creation Date" name="creation_period" date="create_date"/>
+          </search>
+        </field>
+    </record>
+
     <record id="repair_clinics_jobs_action" model="ir.actions.act_window">
         <field name="name">View Jobs</field>        
         <field name="res_model">repair.job</field>
-        <field name="view_mode">list,form</field>        
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_repair_job_search"/>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Book a new repair job
-          </p>
-          <p>
-            Use manufacturer/device details to book a job using IMEI or Serial No.
-          </p>
+          <p class="o_view_nocontent_smiling_face">Book a new repair job</p>
+          <p>Use manufacturer/device details to book a job using IMEI or Serial No.</p>
         </field>
     </record>
 
@@ -39,46 +55,24 @@
                     <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Book Repair Job"/>
                     <button special="cancel" class="btn btn-danger" icon="fa-trash" string="Cancel"/>
                 </header>
-
                 <sheet>
                     <div class="oe_title">
                         <h1>New Job</h1>
                     </div>
                     <group>
                         <group string="Device Specifications" >
-                            <field name="manufacturer_id" 
-                                   string="Brand"
-                                   required="1" 
-                                   widget="selection"/>
-                            <field name="allowed_unit_type_ids" 
-                                   invisible="1"/>
-                            <field name="device_type_id" 
-                                   required="1" 
-                                   string="Device Type"
-                                   widget="selection"/>
-                            <field name="device_model_id" 
-                                   required="1" 
-                                   string="Device Model"
-                                   widget="selection"/>
+                            <field name="manufacturer_id" string="Brand" required="1" widget="selection"/>
+                            <field name="allowed_unit_type_ids" invisible="1"/>
+                            <field name="device_type_id" required="1" string="Device Type" widget="selection"/>
+                            <field name="device_model_id" required="1" string="Device Model" widget="selection"/>
                             <field name="imei_required" invisible="1"/>
                             <field name="serial_required" invisible="1"/>
-
-                            <field name="imei" 
-                                   required="imei_required" 
-                                   string="Imei No"/>
-                            <field name="serial" 
-                                   required="serial_required"
-                                   string="Serial No"/>
+                            <field name="imei" required="imei_required" string="Imei No"/>
+                            <field name="serial" required="serial_required" string="Serial No"/>
                         </group>
-
                         <group string="Customer Details" >
-                            <field name="customer_id" 
-                                   string="Customer"
-                                   domain="[('user_ids', '=', False),('is_company', '=', False)]"
-                                   required="1"/>
-                            <field name="summary" 
-                                   string="Summary"
-                                   required="1"/>                            
+                            <field name="customer_id" string="Customer" domain="[('user_ids', '=', False),('is_company', '=', False)]" required="1"/>
+                            <field name="summary" string="Summary" required="1"/>                            
                         </group>
                     </group>
                 </sheet>
@@ -99,5 +93,4 @@
         <field name="view_id" ref="repair_clinic_job_view_form"/>
         <field name="act_window_id" ref="repair_clinics_jobs_action"/>
     </record>
-
 </odoo>
