@@ -5,19 +5,19 @@
               parent="repair_clinics_menu_root"
               groups="base.group_system"
               sequence="100"/>    
-    <menuitem id="repair_clinic_manufacturer_list" 
-              name="Manufacturers"
+    <menuitem id="repair_clinic_brand_list" 
+              name="Brands"
               parent="repair_clinics_configuration_category" 
-              action="repair_clinic_manufacturer_action"
+              action="repair_clinic_brand_action"
               sequence="10"/>
-    <menuitem id="repair_clinic_unit_type_list" 
+    <menuitem id="repair_clinic_device_category_list" 
               name="Device Unit Type"
               parent="repair_clinics_configuration_category" 
-              action="repair_clinic_unit_type_action"
+              action="repair_clinic_device_category_action"
               sequence="10"/>
-    <menuitem id="repair_clinic_model_list" 
+    <menuitem id="repair_clinic_brand_list" 
               name="Device Model"
               parent="repair_clinics_configuration_category" 
-              action="repair_clinic_model_action"
+              action="repair_clinic_brand_action"
               sequence="10"/>
 </odoo>

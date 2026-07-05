@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="repair_clinic_manufacturer_action" model="ir.actions.act_window">
-        <field name="name">View Manufacturer</field>        
-        <field name="res_model">repair.manufacturer</field>
+    <record id="repair_clinic_brand_action" model="ir.actions.act_window">
+        <field name="name">View Brand</field>        
+        <field name="res_model">repair.device.brand</field>
         <field name="view_mode">list,form</field>        
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Manufacturer
-          </p>
-          <p>
-            Use manufacturer/device details to book a job using IMEI or Serial No.
-          </p>
+            Brands
+          </p>          
         </field>
     </record>
 
     <record id="view_repair_clinic_manufacturer_form" model="ir.ui.view">
-      <field name="name">repair.clinic.manufacturer.form</field>
-      <field name="model">repair.manufacturer</field> 
+      <field name="name">repair.clinic.device.brand.form</field>
+      <field name="model">repair.device.brand</field> 
       <field name="arch" type="xml">
       <form string="New Job" create="1" edit="1">
         <header>
@@ -24,11 +21,11 @@
             <button special="cancel"  class="btn btn-danger"  icon="fa-arrow-left"  string="Cancel"/>
         </header>
         <sheet>
-          <group string="Global Manufacturer Configuration">
+          <group string="Global Brand Configuration">
             <group>
                 <field name="logo" widget="image" class="oe_avatar"/>
-                <field name="name" string="Manufacturer"/>
-                <field name="acronym" string="Acronym"/>                
+                <field name="name" string="Brand"/>
+                <field name="code" string="Code"/>                
                 <field name="active"/>
             </group>
             <group>              

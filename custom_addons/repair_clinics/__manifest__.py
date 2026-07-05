@@ -8,9 +8,9 @@
     'author': 'Coder4web@yahoo.com',
     'data': [
         'security/ir.model.access.csv',
-        'views/repair_manufacturer.xml',
-        'views/repair_unit_type.xml',   
-        'views/repair_model.xml', 
+        'views/repair_brand.xml',
+        'views/repair_category.xml',   
+        'views/repair_device.xml', 
         'views/repair_job_view.xml',
         'views/menus/repair_clinics_menu.xml',
         'views/menus/repair_configuration_menu.xml',

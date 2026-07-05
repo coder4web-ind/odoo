@@ -7,13 +7,13 @@
             <search string="Repair Jobs">
               <field name="imei" string="Imei" />
               <field name="serial" string="Serial" />
-              <field name="manufacturer_id" string="Manufacturer" />
-              <field name="device_type_id" string="Device Type" />
-              <field name="device_model_id" string="Device Model" />              
+              <field name="device_brand_id" string="Manufacturer" />
+              <field name="device_category_id" string="Device Category" />
+              <field name="device_id" string="Device" />              
               <separator/>              
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <filter string="Apple Devices" name="brand_apple" domain="['|',('manufacturer_id.name', 'ilike', 'Apple'),('manufacturer_id.acronym', 'ilike', 'Apple')]"/>
-                <filter string="Samsung Devices" name="brand_samsung" domain="['|',('manufacturer_id.name', '=', 'Samsung'),('manufacturer_id.acronym', '=', 'Samsung')]"/>
+                <filter string="Apple Devices" name="brand_apple" domain="['|',('device_brand_id.name', 'ilike', 'Apple'),('device_brand_id.code', 'ilike', 'Apple')]"/>
+                <filter string="Samsung Devices" name="brand_samsung" domain="['|',('device_brand_id.name', '=', 'Samsung'),('device_brand_id.code', '=', 'Samsung')]"/>
                 <filter string="Creation Date" name="creation_period" date="create_date"/>
           </search>
         </field>
@@ -36,10 +36,10 @@
       <field name="arch" type="xml">
         <list string="Repair Jobs Grid">
           <field name="id" string="Job ID"/>
-          <field name="customer_id" string="Customer"/>
-          <field name="manufacturer_id" string="Manufacturer"/>
-          <field name="device_type_id" string="Unit Type"/>
-          <field name="device_model_id" string="Model"/>
+          <field name="partner_id" string="Customer"/>
+          <field name="device_brand_id" string="Brand"/>
+          <field name="device_category_id" string="Category"/>
+          <field name="device_id" string="Device"/>
           <field name="imei" string="Imei No"/>
           <field name="serial" string="Serial No"/>
         </list>
@@ -61,18 +61,18 @@
                     </div>
                     <group>
                         <group string="Device Specifications" >
-                            <field name="manufacturer_id" string="Brand" required="1" widget="selection"/>
-                            <field name="allowed_unit_type_ids" invisible="1"/>
-                            <field name="device_type_id" required="1" string="Device Type" widget="selection"/>
-                            <field name="device_model_id" required="1" string="Device Model" widget="selection"/>
+                            <field name="device_brand_id" string="Brand" required="1" widget="selection"/>
+                            <field name="allowed_device_category_ids" invisible="1"/>
+                            <field name="device_category_id" required="1" string="Device Category" widget="selection"/>
+                            <field name="device_id" required="1" string="Device" widget="selection"/>
                             <field name="imei_required" invisible="1"/>
                             <field name="serial_required" invisible="1"/>
                             <field name="imei" required="imei_required" string="Imei No"/>
                             <field name="serial" required="serial_required" string="Serial No"/>
                         </group>
                         <group string="Customer Details" >
-                            <field name="customer_id" string="Customer" domain="[('user_ids', '=', False),('is_company', '=', False)]" required="1"/>
-                            <field name="summary" string="Summary" required="1"/>                            
+                            <field name="partner_id" string="Customer" domain="[('user_ids', '=', False),('is_company', '=', False)]" required="1"/>
+                            <field name="summary" string="Summary" required="1"/>
                         </group>
                     </group>
                 </sheet>

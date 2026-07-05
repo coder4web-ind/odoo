@@ -2,13 +2,13 @@ from odoo import models, fields
 from odoo.models import UniqueIndex, Index
 
 
-class RepairDeviceUnityType(models.Model):
-    _name = "repair.unit.type"
-    _description = "Table for electronics gadgets devices models type"
+class RepairDeviceCategory(models.Model):
+    _name = "repair.device.category"
+    _description = "Table for electronics gadgets devices categories"
     _order = "ranking desc, name asc"
 
     ranking = fields.Integer(string="Ranking Priority", default=0)
-    name = fields.Char("Device Type Name", size=64, required=True)
+    name = fields.Char("Device Category", size=64, required=True)
     
     # Converted to Booleans to match your other files perfectly
     imei_required = fields.Boolean("IMEI Required", default=False)
