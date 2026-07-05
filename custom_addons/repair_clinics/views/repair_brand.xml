@@ -11,7 +11,20 @@
         </field>
     </record>
 
-    <record id="view_repair_clinic_manufacturer_form" model="ir.ui.view">
+    <record id="repair_clinic_brand_view_list" model="ir.ui.view"> 
+      <field name="name">repair.device.list</field>
+      <field name="model">repair.device.brand</field> 
+      <field name="arch" type="xml">
+        <list string="Repair Device Brand Grid">
+          <field name="name" string="Name"/>
+          <field name="code" string="Code"/>          
+          <field name="imei_required" string="Imei Required"/>
+          <field name="serial_no_required" string="Serial No Required"/>          
+        </list>
+      </field>
+    </record>
+
+    <record id="view_repair_clinic_brand_form" model="ir.ui.view">
       <field name="name">repair.clinic.device.brand.form</field>
       <field name="model">repair.device.brand</field> 
       <field name="arch" type="xml">

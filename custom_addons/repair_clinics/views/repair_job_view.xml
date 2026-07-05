@@ -35,7 +35,7 @@
       <field name="model">repair.job</field> 
       <field name="arch" type="xml">
         <list string="Repair Jobs Grid">
-          <field name="id" string="Job ID"/>
+          <field name="name" string="Job ID"/>
           <field name="partner_id" string="Customer"/>
           <field name="device_brand_id" string="Brand"/>
           <field name="device_category_id" string="Category"/>
@@ -48,19 +48,23 @@
 
     <record id="repair_clinic_job_view_form" model="ir.ui.view">
       <field name="name">repair.job.form</field>
-      <field name="model">repair.job</field> 
+      <field name="model">repair.job</field>
       <field name="arch" type="xml">
-            <form string="New Job" create="1" edit="0">
+            <form string="New Job" create="1" edit="1">                
                 <header>
                     <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Book Repair Job"/>
                     <button special="cancel" class="btn btn-danger" icon="fa-trash" string="Cancel"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1>New Job</h1>
-                    </div>
+                    <h1 invisible="id">New Job</h1>                    
+                    <h1 invisible="not id">
+                        <field name="name" readonly="1"/>
+                    </h1>
+                </div>
                     <group>
                         <group string="Device Specifications" >
+                            <field name="name" string="Job ID"/>
                             <field name="device_brand_id" string="Brand" required="1" widget="selection"/>
                             <field name="allowed_device_category_ids" invisible="1"/>
                             <field name="device_category_id" required="1" string="Device Category" widget="selection"/>
@@ -71,8 +75,9 @@
                             <field name="serial" required="serial_required" string="Serial No"/>
                         </group>
                         <group string="Customer Details" >
-                            <field name="partner_id" string="Customer" domain="[('user_ids', '=', False),('is_company', '=', False)]" required="1"/>
+                            <field name="partner_id" readonly="id" string="Customer" domain="[('user_ids', '=', False),('is_company', '=', False)]" required="1"/>
                             <field name="summary" string="Summary" required="1"/>
+                            <field name="repair_complete_date" readonly="True" string="Completed" invisible="[('state','not in',('done','delivered'))]"/>
                         </group>
                     </group>
                 </sheet>
