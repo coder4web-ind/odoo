@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 from datetime import datetime,timezone
 
 from odoo import models, fields, api
@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class RepairJob(models.Model):
     _name = "repair.job"
     _description = "Repair Job Management"
-    _inherit = ['mail.thread']
+    
 
     name = fields.Char('Ticket #', default='New', readonly=True, copy=False)
     summary = fields.Text('Summary', required=True)
@@ -89,22 +89,29 @@ class RepairJob(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get("name",'New') == 'New':
+            if vals.get("name", "New") == "New" or vals.get("name", "/") == "/":
                 now = datetime.now()
-                date = now.strftime("%Y%m%d")
+                date_str = now.strftime("%Y%m%d") 
+                
                 partner = self.env['res.partner'].browse(vals.get('partner_id'))
-                country_code = partner.country_id.code if partner.country_id else 'XX'
-                prefix = f"Repair{date}{country_code}_"                
-                last_job = self.search([('name', '=like', f"{prefix}%")], order='name desc', limit=1)
+                country_code = partner.country_id.code if partner.country_id and partner.country_id.code else 'XX'
+                
+                search_prefix = f"Repair{date_str}"                
+                last_job = self.search([('name', '=like', f"{search_prefix}%")], order='name desc', limit=1)
                 next_number = 1
+                
                 if last_job:
                     try:
                         last_sequence_str = last_job.name.split("_")[-1]
-                        next_number = int(last_sequence_str)+1
-                    except (ValueError,IndexError):
+                        next_number = int(last_sequence_str) + 1
+                    except (ValueError, IndexError):
                         next_number = 1
 
-                vals['name'] = f"{prefix}{next_number}"
+                vals['name'] = f"{search_prefix}{country_code}_{next_number}"
+
+
+                if vals.get('state') == 'draft':
+                    vals['state'] = 'received'
         
         return super().create(vals_list)
     
@@ -118,3 +125,15 @@ class RepairJob(models.Model):
                 vals['repair_complete_date'] = False
 
         return super().write(vals)
+    
+
+    def unlink(self):
+        for job in self:
+            # Block deletion if the job has progressed past draft or received
+            if job.state not in ['draft', 'received']:
+                raise UserError(_(
+                    "Security Restriction: You can only delete repair jobs that are in 'Draft' or 'Received' status. "
+                    "Job (%s) is currently '%s' and cannot be removed."
+                ) % (job.name, job.state.capitalize()))        
+        
+        return super(RepairJob, self).unlink()

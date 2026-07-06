@@ -5,6 +5,7 @@
         <field name="model">repair.job</field>
         <field name="arch" type="xml">
             <search string="Repair Jobs">
+              <field name="name" string="Job Id" />
               <field name="imei" string="Imei" />
               <field name="serial" string="Serial" />
               <field name="device_brand_id" string="Manufacturer" />
@@ -26,7 +27,7 @@
         <field name="search_view_id" ref="view_repair_job_search"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">Book a new repair job</p>
-          <p>Use manufacturer/device details to book a job using IMEI or Serial No.</p>
+          <p>Use Brand/device details to book a job using IMEI or Serial No.</p>
         </field>
     </record>
 
@@ -52,8 +53,15 @@
       <field name="arch" type="xml">
             <form string="New Job" create="1" edit="1">                
                 <header>
-                    <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Book Repair Job"/>
+                    <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Book Repair Job" invisible="id" />
+                    <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Edit Repair Job" invisible="not id" />
                     <button special="cancel" class="btn btn-danger" icon="fa-trash" string="Cancel"/>
+                    <field 
+                        name="state" 
+                        widget="statusbar" 
+                        statusbar_visible="draft,received,repairing,done,delivered"
+                        decoration-success="[('state','=','delivered')]"
+                        />
                 </header>
                 <sheet>
                     <div class="oe_title">

@@ -1,11 +1,17 @@
 {
     'name': 'Repair Clinics',
+    'summary': 'Streamlined device repair tracking compliant with EU Directive 2024/1799 framework rules.',
     'version': '19.0.1.0.0',
-    'category': 'Services/Repair',
-    'sequence': 5,
-    'summary': 'Core Booking & Device Tracking for Electronic Gadgets',
-    'depends': ['base','mail'],
-    'author': 'Coder4web@yahoo.com',
+    'category': 'Services',
+    'author': 'Coder4Web',
+    'website': 'mailto:coder4web@yahoo.com',
+    'license': 'OPL-1',
+    'price': 20.00,
+    'currency': 'EUR',
+    'depends': [
+        'base',
+        'account',
+    ],
     'data': [
         'security/ir.model.access.csv',
         'views/repair_brand.xml',
@@ -15,8 +21,16 @@
         'views/menus/repair_clinics_menu.xml',
         'views/menus/repair_configuration_menu.xml',
     ],
+    'demo': [
+        'demo/repair_category_demo.xml',
+        'demo/repair_brand_demo.xml',
+        'demo/repair_device_demo.xml',
+    ],
+    'images': [
+        'static/description/banner.png',        
+        'static/description/repair_job.png'
+    ],
     'installable': True,
-    'auto_install': False,
     'application': True,
-    'license': 'OPL-1',
+    'auto_install': False,
 }

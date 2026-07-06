@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_category_mobile" model="repair.device.category">
+        <field name="name">Mobile Phones</field>
+        <field name="ranking">1</field>
+    </record>
+    <record id="demo_category_tablet" model="repair.device.category">
+        <field name="name">Tablet</field>
+        <field name="ranking">2</field>
+    </record>
+    <record id="demo_category_laptop" model="repair.device.category">
+        <field name="name">Laptops</field>
+        <field name="ranking">3</field>
+    </record>
+    <record id="demo_category_tv" model="repair.device.category">
+        <field name="name">Televisions</field>
+        <field name="ranking">4</field>
+    </record>
+</odoo>

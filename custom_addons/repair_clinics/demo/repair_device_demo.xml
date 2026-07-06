@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- iPhone 15 Pro linked to Apple and Mobile category -->
+    <record id="demo_device_iphone15" model="repair.device">
+        <field name="name">iPhone 15 Pro</field>
+        <field name="code">iPhone 15 Pro</field>
+        <field name="description">iPhone 15 Pro</field>
+        <field name="device_brand_id" ref="demo_brand_apple"/>
+        <field name="device_category_id" ref="demo_category_mobile"/>
+    </record>
+
+    <!-- Galaxy S24 linked to Samsung and Mobile category -->
+    <record id="demo_device_s24" model="repair.device">
+        <field name="name">Galaxy S24 Ultra</field>
+        <field name="code">Galaxy S24 Ultra</field>
+        <field name="description">Galaxy S24 Ultra</field>
+        <field name="device_brand_id" ref="demo_brand_samsung"/>
+        <field name="device_category_id" ref="demo_category_mobile"/>
+    </record>
+</odoo>

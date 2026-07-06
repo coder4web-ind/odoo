@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_brand_apple" model="repair.device.brand">
+        <field name="name">Apple</field>
+        <field name="code">Apple</field>
+    </record>
+    <record id="demo_brand_samsung" model="repair.device.brand">
+        <field name="name">Samsung</field>
+        <field name="code">Samsung</field>
+    </record>
+</odoo>

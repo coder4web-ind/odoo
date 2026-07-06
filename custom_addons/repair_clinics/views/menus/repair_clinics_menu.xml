@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+   
+
     <menuitem id="repair_clinics_menu_root" 
               name="Repair Jobs"
               sequence="10"/>
