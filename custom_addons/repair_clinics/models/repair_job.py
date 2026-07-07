@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 from odoo.exceptions import ValidationError,UserError
 from datetime import datetime,timezone
 
@@ -32,7 +32,7 @@ class RepairJob(models.Model):
         ('delivered', 'Delivered'),
         ('cancel', 'Cancelled')
     ], default='draft', tracking=True)    
-    cancel_notes = fields.Text('Cancel Notes')
+    invoice_id = fields.Many2one('account.move', string="Linked Invoice", readonly=True)
     repair_complete_date = fields.Datetime("Date of Repair Complete")
     active = fields.Boolean(string="Active", default=True)
 
@@ -116,24 +116,70 @@ class RepairJob(models.Model):
         return super().create(vals_list)
     
 
-    def wrtie(self,vals):
+    def write(self, vals):
         if 'state' in vals:
             new_state = vals.get('state')
-            if new_state in ('done','delivered'):
+            if new_state in ('done', 'delivered'):
                 vals['repair_complete_date'] = datetime.now(timezone.utc)
             else:
                 vals['repair_complete_date'] = False
 
         return super().write(vals)
-    
 
     def unlink(self):
         for job in self:
-            # Block deletion if the job has progressed past draft or received
-            if job.state not in ['draft', 'received']:
+            # Clean Pythonic condition checking state OR if an invoice is linked
+            if job.state not in ['draft', 'received'] or job.invoice_id:
                 raise UserError(_(
-                    "Security Restriction: You can only delete repair jobs that are in 'Draft' or 'Received' status. "
-                    "Job (%s) is currently '%s' and cannot be removed."
-                ) % (job.name, job.state.capitalize()))        
+                    "Security Restriction: You cannot delete this repair job. "
+                    "Jobs can only be deleted if they are in 'Draft' or 'Received' status "
+                    "AND have no customer invoice linked to them. "
+                    "(Job: %s | Status: %s | Invoice Linked: %s)"
+                ) % (job.name, job.state.capitalize(), 'Yes' if job.invoice_id else 'No'))        
         
         return super(RepairJob, self).unlink()
+    
+    def action_view_invoice(self):
+        """ Opens the linked invoice form view instantly """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Invoice',
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': self.invoice_id.id,
+            'target': 'current',
+        }
+    
+    def action_create_invoice(self):
+        """ Generates a draft invoice for the customer based on the repair job """
+        self.ensure_one()
+        
+        if self.invoice_id:
+            raise UserError(_("An invoice already exists for this repair job."))
+
+        invoice_vals = {
+            'move_type': 'out_invoice',                  
+            'partner_id': self.partner_id.id,            
+            'ref': f"Repair Service: {self.name}",       
+            'invoice_origin': self.name,                 
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': f"Hardware Repair Service - Ticket: {self.name}\nSummary: {self.summary}",
+                    'quantity': 1.0,
+                    'price_unit': 0.0, # Leave at 0.0 so the technician can fill it in, or link a product
+                })
+            ],
+        }
+
+        invoice = self.env['account.move'].create(invoice_vals)
+        self.invoice_id = invoice.id
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Customer Invoice'),
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': invoice.id,
+            'target': 'current',
+        }

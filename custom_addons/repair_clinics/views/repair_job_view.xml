@@ -53,17 +53,28 @@
       <field name="arch" type="xml">
             <form string="New Job" create="1" edit="1">                
                 <header>
-                    <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Book Repair Job" invisible="id" />
-                    <button special="save" class="btn btn-primary me-1" icon="fa-book" string="Edit Repair Job" invisible="not id" />
-                    <button special="cancel" class="btn btn-danger" icon="fa-trash" string="Cancel"/>
-                    <field 
-                        name="state" 
+                    <button name="action_create_invoice" 
+                            string="Create Invoice" 
+                            type="object" 
+                            class="oe_highlight" 
+                            invisible="state != 'done'"/>
+                    
+                    <field name="state" 
                         widget="statusbar" 
-                        statusbar_visible="draft,received,repairing,done,delivered"
-                        decoration-success="[('state','=','delivered')]"
-                        />
+                        statusbar_visible="draft,received,repairing,done,delivered"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                            invisible="state != 'delivered' or not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">View Invoice</span>
+                            </div>
+                        </button>
+                    </div>
                     <div class="oe_title">
                     <h1 invisible="id">New Job</h1>                    
                     <h1 invisible="not id">
