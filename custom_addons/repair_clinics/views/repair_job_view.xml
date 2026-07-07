@@ -38,6 +38,7 @@
         <list string="Repair Jobs Grid">
           <field name="name" string="Job ID"/>
           <field name="partner_id" string="Customer"/>
+          <field name="state" string="Current Status"/>
           <field name="device_brand_id" string="Brand"/>
           <field name="device_category_id" string="Category"/>
           <field name="device_id" string="Device"/>
@@ -61,7 +62,8 @@
                     
                     <field name="state" 
                         widget="statusbar" 
-                        statusbar_visible="draft,received,repairing,done,delivered"/>
+                        statusbar_visible="draft,received,repairing,done,delivered"
+                        options="{'clickable': '1'}" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

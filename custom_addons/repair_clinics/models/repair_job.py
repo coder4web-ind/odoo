@@ -120,7 +120,7 @@ class RepairJob(models.Model):
         if 'state' in vals:
             new_state = vals.get('state')
             if new_state in ('done', 'delivered'):
-                vals['repair_complete_date'] = datetime.now(timezone.utc)
+                vals['repair_complete_date'] = fields.Datetime.now()
             else:
                 vals['repair_complete_date'] = False
 
