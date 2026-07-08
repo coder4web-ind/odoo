@@ -127,8 +127,7 @@ class RepairJob(models.Model):
         return super().write(vals)
 
     def unlink(self):
-        for job in self:
-            # Clean Pythonic condition checking state OR if an invoice is linked
+        for job in self:            
             if job.state not in ['draft', 'received'] or job.invoice_id:
                 raise UserError(_(
                     "Security Restriction: You cannot delete this repair job. "
@@ -181,10 +180,7 @@ class RepairJob(models.Model):
             'invoice_origin': self.name,                 
         }
 
-        # 1. Create the top-level container first
-        invoice = self.env['account.move'].create(invoice_vals)
-        
-        # 2. Append lines via write to force open the UI text entry blocks
+        invoice = self.env['account.move'].create(invoice_vals)        
         invoice.write({
             'invoice_line_ids': [
                 (0, 0, {
@@ -196,8 +192,6 @@ class RepairJob(models.Model):
         })
         
         self.invoice_id = invoice.id
-        
-        # FIX FOR TEST_02: Advance the workflow status bar to 'delivered'
         self.state = 'delivered'
         
         return {
@@ -208,7 +202,7 @@ class RepairJob(models.Model):
             'res_id': invoice.id,
             'target': 'current',
             'context': {
-                'default_move_type': 'out_invoice',      # Ensures user landing page loads customer layouts
+                'default_move_type': 'out_invoice',
                 'journal_id': journal.id,
             },
         }
