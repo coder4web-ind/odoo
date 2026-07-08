@@ -6,7 +6,7 @@
     'author': 'Coder4Web',
     'website': 'mailto:coder4web@yahoo.com',
     'license': 'OPL-1',
-    'price': 20.00,
+    'price': '20.00',
     'currency': 'EUR',
     'depends': [
         'base',
