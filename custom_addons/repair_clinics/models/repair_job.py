@@ -31,7 +31,7 @@ class RepairJob(models.Model):
         ('done', 'Done'),
         ('delivered', 'Delivered'),
         ('cancel', 'Cancelled')
-    ], default='draft', tracking=True)    
+    ], default='draft')    
     invoice_id = fields.Many2one('account.move', string="Linked Invoice", readonly=True)
     repair_complete_date = fields.Datetime("Date of Repair Complete")
     active = fields.Boolean(string="Active", default=True)
@@ -154,26 +154,51 @@ class RepairJob(models.Model):
     def action_create_invoice(self):
         """ Generates a draft invoice for the customer based on the repair job """
         self.ensure_one()
+
+        if self.state == 'draft':
+            raise UserError(_("You cannot generate an invoice for a job in Draft state."))
         
         if self.invoice_id:
             raise UserError(_("An invoice already exists for this repair job."))
+        
+        active_company_id = self.partner_id.company_id.id or self.env.company.id
+        journal = self.env['account.journal'].search([
+            ('type', '=', 'sale'), 
+            ('company_id', '=', active_company_id)
+        ], limit=1)
+
+        if not journal:
+            raise UserError(_(
+                "Configuration Error: No active Sales Journal found for your current company. "
+                "Please ensure a customer invoice journal is configured in Accounting settings."
+            ))
 
         invoice_vals = {
             'move_type': 'out_invoice',                  
             'partner_id': self.partner_id.id,            
+            'journal_id': journal.id,
             'ref': f"Repair Service: {self.name}",       
             'invoice_origin': self.name,                 
+        }
+
+        # 1. Create the top-level container first
+        invoice = self.env['account.move'].create(invoice_vals)
+        
+        # 2. Append lines via write to force open the UI text entry blocks
+        invoice.write({
             'invoice_line_ids': [
                 (0, 0, {
                     'name': f"Hardware Repair Service - Ticket: {self.name}\nSummary: {self.summary}",
                     'quantity': 1.0,
-                    'price_unit': 0.0, # Leave at 0.0 so the technician can fill it in, or link a product
+                    'price_unit': 0.0, 
                 })
-            ],
-        }
-
-        invoice = self.env['account.move'].create(invoice_vals)
+            ]
+        })
+        
         self.invoice_id = invoice.id
+        
+        # FIX FOR TEST_02: Advance the workflow status bar to 'delivered'
+        self.state = 'delivered'
         
         return {
             'type': 'ir.actions.act_window',
@@ -182,4 +207,8 @@ class RepairJob(models.Model):
             'view_mode': 'form',
             'res_id': invoice.id,
             'target': 'current',
+            'context': {
+                'default_move_type': 'out_invoice',      # Ensures user landing page loads customer layouts
+                'journal_id': journal.id,
+            },
         }
